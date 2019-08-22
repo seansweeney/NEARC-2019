@@ -1,49 +1,94 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+	<title>Migrating AGOL User Accounts Using the ArcGIS API for Python</title>
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/monokai.css">
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/simple.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/monokai.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<h2>
+					<p>Migrating AGOL User Accounts Using the ArcGIS API for Python</p>
+				</h2>
+				<p>Sean Sweeney, GIS Senior Programmer Analyst</p>
+				<p>City of Cambridge, MA</p>
+				<small>
+					<p>NEARC - Newry, ME</p>
+					<p>October 21, 2019</p>
+				</small>
+				<aside class="notes">
+					<p>Cambridge is moving the majority of our ArcGIS Online users from AGOL logins to enterprise logins. Our goal is to 
+						move users in a controlled manner - not only their content, but their profile and other aspects of their AGOL identity - 
+						from their old AGOL login to their new enterprise account.
+
+						I'll demonstrate some of the components of the ArcGIS API for Python we're using to accomplish this, point out a few 
+						curveballs we've run into along the way, and also show final Python script that (mostly) automates the process.</p>
+					</p>
+				</aside>
+			</section>
+			<section>
+				<h1>Demos</h1>
+			</section>
+			<section>
+				<h4>More Info</h4>
+				<h5>Me</h5>
+				<small>
+					<p>Email: <span style='color:#f48341'>ssweeney@cambridgema.gov</span>
+					Twitter: <a target='_blank' href='https://twitter.com/hiker4k' style='color:#f48341'>@hiker4k</a>
+					GitHub: <a target='_blank' href='https://github.com/seansweeney' style='color:#f48341'>seansweeney</a></p>
+					<p>This Presentation: <a target='_blank' href='https://github.com/seansweeney/NEARC-2019' style='color:#f48341'>https://github.com/seansweeney/NEARC-2019</a></p>
+				</small>
+				<h5>Us</h5>
+				<small>
+					<p>Web: <a target='_blank' href='http://cambridgema.gov/gis' style='color:#418d41'>http://cambridgema.gov/gis</a>
+					Twitter: <a target='_blank' href='https://twitter.com/cambridgegis' style='color:#418d41'>@CambridgeGIS</a></p>
+				</small>
+			</section>
 		</div>
+	</div>
 
-		<script src="js/reveal.js"></script>
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true }
-				]
-			});
-		</script>
-	</body>
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			showNotes: false,
+			transition: 'none',
+			history: 'true',
+			dependencies: [
+				// { src: 'plugin/markdown/marked.js' },
+				// { src: 'plugin/markdown/markdown.js' },
+				{ src: 'plugin/notes/notes.js', async: true },
+				{ src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+			]
+		});
+	</script>
+</body>
+
 </html>
