@@ -138,7 +138,7 @@ except exceptions.Exception as e:
 					<h4>User.update()</h4>
 					<section>
 					<pre>
-						<code data-line-numbers="1">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
+<code data-line-numbers="1">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
 
 sso_user.update(access=agol_user.access, 
 		preferred_view=agol_user.preferredView, 
@@ -156,7 +156,7 @@ sso_user.update(access=agol_user.access,
 				</section>
 				<section>
 					<pre>
-						<code data-line-numbers="3-12">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
+<code data-line-numbers="3-12">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
 
 sso_user.update(access=agol_user.access, 
 		preferred_view=agol_user.preferredView, 
@@ -227,29 +227,49 @@ sso_user.update(access=agol_user.access,
 			</section>
 			</section>
 			<section>
-					<h3>Profile Items</h3>
-					<h4>Regionalization & Esri Access</h4>
-					<pre>
-	<code class="python" data-line-numbers># Regionalization #
+				<h3>Profile Items</h3>
+				<h4>Regionalization & Esri Access</h4>
+				<pre>
+<code class="python" data-line-numbers># Regionalization #
 sso_user.units = agol_user.units
 sso_user.cultureFormat = agol_user.cultureFormat
 			
 # Esri access #
 if (agol_user.esri_access == 'both'):
 	sso_user.esri_access = True
-	</code>
+</code>
+				</pre>
+			</section>
+			<section>
+				<h3>Groups</h3>
+				<section>
+					<pre>
+<code class="python" data-line-numbers="1-4">print('Updating groups'.center(40,'-'))
+for group in agol_user.groups:
+	if (group.owner == agol_username):
+		print('Changing ownership: ' + group.title)
+		group.reassign_to(sso_username)
+	else:
+		print('Joining: ' + group.title)
+		group.add_users([sso_username])	
+</code>
 					</pre>
 				</section>
 				<section>
-						<h3>Profile Items</h3>
-						<h4>4</h4>
-						<pre>
-		<code class="python" data-line-numbers>
-		
-		</code>
-						</pre>
-					</section>
-						<section>
+					<pre>
+<code class="python" data-line-numbers="5-8">print('Updating groups'.center(40,'-'))
+for group in agol_user.groups:
+	if (group.owner == agol_username):
+		print('Changing ownership: ' + group.title)
+		group.reassign_to(sso_username)
+	else:
+		print('Joining: ' + group.title)
+		group.add_users([sso_username])	
+</code>
+					</pre>
+				</section>
+			</section>
+			<section>
 				<h1>Demos</h1>
 			</section>
 			<section>
