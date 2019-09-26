@@ -63,7 +63,7 @@
 				<section>
 					<h3>Connect to ArcGIS Online</h3>
 					<pre>
-<code data-line-numbers># Get username and password
+<code class="python" data-line-numbers># Get username and password
 # TODO: incorporate SSO login
 username = input('Connection username: ')
 password = getpass(prompt='Connection password: ')
@@ -80,7 +80,7 @@ except:
 				<section>
 					<h3>Connect to ArcGIS Online</h3>
 					<pre>
-<code data-line-numbers="8"># Get username and password
+<code class="python" data-line-numbers="8"># Get username and password
 # TODO: incorporate SSO login
 username = input('Connection username: ')
 password = getpass(prompt='Connection password: ')
@@ -134,9 +134,9 @@ except exceptions.Exception as e:
 				<img src='images/profile_items.png' alt='Profile Items' style="border:none;" />
 			</section>
 			<section>
-				<h3>Profile Items</h3>
-				<h4>User.update()</h4>
-				<section>
+					<h3>Profile Items</h3>
+					<h4>User.update()</h4>
+					<section>
 					<pre>
 						<code data-line-numbers="1">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
 
@@ -193,19 +193,50 @@ sso_user.update(access=agol_user.access,
 			</section>
 			<section>
 				<h3>Profile Items</h3>
-				<h4>2</h4>
-				<pre>
-<code data-line-numbers>
-
+				<h4>Role</h4>
+				<section>
+					<pre>
+<code class="python" data-line-numbers>if (agol_user.role == agol_user.roleId):
+		# Built-in user role - assign directly
+		sso_user.update_role(role=agol_user.role)
+	else:
+		# Custom role - first get role object from RoleManager
+		role = gis.users.roles.get_role(agol_user.roleId)
+		sso_user.update_role(role=role)
+</code>
+					</pre>
+					<aside class="notes">
+							For built-in user roles (<em>org_user, org_publisher, org_admin, viewer, view_only, viewplusedit</em>) you can just pass the <em>role</em> property to <em>update_role</em>. Users that don't have a custom role will have <em>User.role == User.RoleId</em>.
+							<br /><br />
+							For custom roles you have to get the role object from the <a href="https://developers.arcgis.com/python/api-reference/arcgis.gis.toc.html#rolemanager" target="_blank">RoleManager</a> static class (via gis.users.roles).
+							<br /><br />
+							You can't just use the second method for all of them because the built-in roles don't exist in the <em>RoleManager</em>.
+					</aside>
+				</section>
+				<section>
+					<pre>
+<code class="python" data-line-numbers>if (agol_user.role == agol_user.roleId):
+		# Built-in user role - assign directly
+		sso_user.update_role(role=agol_user.role)
+	else:
+		# Custom role - first get role object from RoleManager
+		role = gis.users.roles.get_role(agol_user.roleId)
+		sso_user.update_role(role=role)
 </code>
 				</pre>
 			</section>
+			</section>
 			<section>
 					<h3>Profile Items</h3>
-					<h4>3</h4>
+					<h4>Regionalization & Esri Access</h4>
 					<pre>
-	<code data-line-numbers>
-	
+	<code class="python" data-line-numbers># Regionalization #
+sso_user.units = agol_user.units
+sso_user.cultureFormat = agol_user.cultureFormat
+			
+# Esri access #
+if (agol_user.esri_access == 'both'):
+	sso_user.esri_access = True
 	</code>
 					</pre>
 				</section>
@@ -213,7 +244,7 @@ sso_user.update(access=agol_user.access,
 						<h3>Profile Items</h3>
 						<h4>4</h4>
 						<pre>
-		<code data-line-numbers>
+		<code class="python" data-line-numbers>
 		
 		</code>
 						</pre>
