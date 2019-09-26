@@ -30,7 +30,7 @@
     		font-size: 0.5em;
 			box-shadow: none;
 		}
-		.reveal h3 {
+		.reveal h3, .reveal h4 {
 			text-transform: none;
 		}
 	</style>
@@ -60,7 +60,82 @@
 				</aside>
 			</section>
 			<section>
-				<h3>User.update()</h3>
+				<section>
+					<h3>Connect to ArcGIS Online</h3>
+					<pre>
+<code data-line-numbers># Get username and password
+# TODO: incorporate SSO login
+username = input('Connection username: ')
+password = getpass(prompt='Connection password: ')
+
+# Connect to ArcGIS Online
+try:
+	gis = GIS("https://arcgis.com/", username, password)
+except:
+	print(sys.exc_info()[0])
+	exit(1)
+</code>
+					</pre>
+				</section>
+				<section>
+					<h3>Connect to ArcGIS Online</h3>
+					<pre>
+<code data-line-numbers="8"># Get username and password
+# TODO: incorporate SSO login
+username = input('Connection username: ')
+password = getpass(prompt='Connection password: ')
+
+# Connect to ArcGIS Online
+try:
+	gis = GIS("https://arcgis.com/", username, password)
+except:
+	print(sys.exc_info()[0])
+	exit(1)
+</code>
+					</pre>
+				</section>
+				<section>
+					<h3>Connect to ArcGIS Online</h3>
+					<pre>
+<code data-line-numbers="8"># Get username and password
+# TODO: incorporate SSO login
+username = input('Connection username: ')
+password = getpass(prompt='Connection password: ')
+
+# Connect to ArcGIS Online
+try:
+	gis = GIS(username=username,password=password)
+except:
+	print(sys.exc_info()[0])
+	exit(1)
+</code>
+					</pre>
+				</section>
+			</section>
+			<section>
+				<h3>Get pointers to old and new users</h3>
+				<pre>
+<code class="python"># Get pointers to old and new users
+agol_username = input('AGOL (old) username: ')
+
+sso_username = input('SSO (new) username: ')
+
+try:
+	agol_user = gis.users.get(agol_username)
+	sso_user = gis.users.get(sso_username)
+except exceptions.Exception as e:
+	print("Unexpected error: {}".format(e))
+	raise e
+</code>
+				</pre>
+			</section>
+			<section>
+			<h3>Profile Items</h3>
+				<img src='images/profile_items.png' alt='Profile Items' style="border:none;" />
+			</section>
+			<section>
+				<h3>Profile Items</h3>
+				<h4>User.update()</h4>
 				<section>
 					<pre>
 						<code data-line-numbers="1">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
@@ -98,8 +173,8 @@ sso_user.update(access=agol_user.access,
 					</pre>
 				</section>
 				<section>
-						<pre>
-							<code data-line-numbers="10-12">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
+					<pre>
+<code data-line-numbers="10-12">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
 	
 sso_user.update(access=agol_user.access, 
 		preferred_view=agol_user.preferredView, 
@@ -112,11 +187,38 @@ sso_user.update(access=agol_user.access,
 		first_name=agol_user.firstName, 
 		last_name=agol_user.lastName
 		)
-							</code>
+</code>
+					</pre>
+				</section>
+			</section>
+			<section>
+				<h3>Profile Items</h3>
+				<h4>2</h4>
+				<pre>
+<code data-line-numbers>
+
+</code>
+				</pre>
+			</section>
+			<section>
+					<h3>Profile Items</h3>
+					<h4>3</h4>
+					<pre>
+	<code data-line-numbers>
+	
+	</code>
+					</pre>
+				</section>
+				<section>
+						<h3>Profile Items</h3>
+						<h4>4</h4>
+						<pre>
+		<code data-line-numbers>
+		
+		</code>
 						</pre>
 					</section>
-				</section>
-			<section>
+						<section>
 				<h1>Demos</h1>
 			</section>
 			<section>
