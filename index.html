@@ -33,6 +33,10 @@
 		.reveal h3, .reveal h4 {
 			text-transform: none;
 		}
+		.reveal pre code {
+			max-height: initial;
+			tab-size: 4;
+		}
 	</style>
 </head>
 
@@ -50,13 +54,76 @@
 					<p>October 21, 2019</p>
 				</small>
 				<aside class="notes">
+					<strong>Abstract:</strong>
 					<p>Cambridge is moving the majority of our ArcGIS Online users from AGOL logins to enterprise logins. Our goal is to 
 						move users in a controlled manner - not only their content, but their profile and other aspects of their AGOL identity - 
-						from their old AGOL login to their new enterprise account.
+						from their old AGOL login to their new enterprise account.</p>
 
-						I'll demonstrate some of the components of the ArcGIS API for Python we're using to accomplish this, point out a few 
+						<p>I'll demonstrate some of the components of the ArcGIS API for Python we're using to accomplish this, point out a few 
 						curveballs we've run into along the way, and also show final Python script that (mostly) automates the process.</p>
 					</p>
+				</aside>
+			</section>
+			<section>
+				<h3>Why?</h3>
+				<ul>
+					<li>
+						One login
+					</li>
+					<li>
+						Simplified management
+					</li>
+					<li>
+						Enforce password policy
+					</li>
+					<li>
+						Better access control
+					</li>
+				</ul>
+				<aside class="notes">
+					<ul>
+							<li>
+								One login - Users don't have to remember a separate username and login for AGOL.
+							</li>
+							<li>
+								Enforce password policy - The city login is subject to password policies that aren't available on AGOL, making it more secure.
+							</li>
+							<li>
+								Simplified management - Users can be managed through an Active Directory group.
+							</li>
+							<li>
+								Better access control - When people leave the city and their city account is disabled, they automatically lose access to our AGOL organization.
+							</li>
+						</ul>
+				</aside>
+			</section>
+			<section>
+				<h3>What?</h3>
+				<ul>
+					<li>
+						Profile
+					</li>
+					<li>
+						Folders
+					</li>
+					<li>
+						Items
+					</li>
+					<li>
+						Groups
+					</li>
+					<li>
+						Role
+					</li>
+					<li>
+						Credits
+					</li>
+					<li>
+						Esri access
+					</li>
+				</ul>
+				<aside class="notes">
+					Esri has ways through the UI to move a user's content to another user, but we wanted to move everything about the use to the new account.
 				</aside>
 			</section>
 			<section>
@@ -76,6 +143,13 @@ except:
 	exit(1)
 </code>
 					</pre>
+					<aside class="notes">
+						<p>SSO login from the script was working for a while but has since stopped working for me.  I'm using my old AGOL account with admin 
+						access to run the script in the mean time.</p>
+						
+						<p>For more info about SSO access from a script see 
+						<a href="https://developers.arcgis.com/python/guide/working-with-different-authentication-schemes/#User-authentication-with-OAuth-2.0" target="_blank">User authentication with OAuth 2.0</a>.</p>
+					</aside>
 				</section>
 				<section>
 					<h3>Connect to ArcGIS Online</h3>
@@ -93,6 +167,9 @@ except:
 	exit(1)
 </code>
 					</pre>
+					<aside class="notes">
+						Note you don't have to specify the organization URL if your login user only belongs to one organization.
+					</aside>
 				</section>
 				<section>
 					<h3>Connect to ArcGIS Online</h3>
@@ -110,7 +187,10 @@ except:
 	exit(1)
 </code>
 					</pre>
-				</section>
+					<aside class="notes">
+						In fact you don't need to specify any URL - it defaults to https://arcgis.com.
+					</aside>
+					</section>
 			</section>
 			<section>
 				<h3>Get pointers to old and new users</h3>
@@ -138,24 +218,6 @@ except exceptions.Exception as e:
 					<h4>User.update()</h4>
 					<section>
 					<pre>
-<code data-line-numbers="1">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
-
-sso_user.update(access=agol_user.access, 
-		preferred_view=agol_user.preferredView, 
-		description=agol_user.description, 
-		tags=agol_user.tags, 
-		thumbnail=agol_thumbnail_download, 
-		culture=agol_user.culture, 
-		region=agol_user.region, 
-		fullname=agol_user.fullName, 
-		first_name=agol_user.firstName, 
-		last_name=agol_user.lastName
-		)
-						</code>
-					</pre>
-				</section>
-				<section>
-					<pre>
 <code data-line-numbers="3-12">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
 
 sso_user.update(access=agol_user.access, 
@@ -171,7 +233,32 @@ sso_user.update(access=agol_user.access,
 		)
 						</code>
 					</pre>
+					<aside class="notes">
+						<p>Most of the basic profile items are handled by the <a href="https://developers.arcgis.com/python/api-reference/arcgis.gis.toc.html#arcgis.gis.User.update" target="_blank">user.update()</a> method.</p>
+					</aside>
 				</section>
+				<section>
+					<pre>
+<code data-line-numbers="1,7">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
+
+sso_user.update(access=agol_user.access, 
+		preferred_view=agol_user.preferredView, 
+		description=agol_user.description, 
+		tags=agol_user.tags, 
+		thumbnail=agol_thumbnail_download, 
+		culture=agol_user.culture, 
+		region=agol_user.region, 
+		fullname=agol_user.fullName, 
+		first_name=agol_user.firstName, 
+		last_name=agol_user.lastName
+		)
+						</code>
+					</pre>
+					<aside class="notes">
+							<p>Although the <em>thumbnail</em> input to <em>user.update()</em> is supposed to be able to take a URL, I found that didn't work for me so I 
+							   download the thumbmail to my TEMP directory and upload it from there to the new account.</p>
+						</aside>
+					</section>
 				<section>
 					<pre>
 <code data-line-numbers="10-12">agol_thumbnail_download = agol_user.download_thumbnail(os.getenv('TEMP'))
@@ -196,34 +283,42 @@ sso_user.update(access=agol_user.access,
 				<h4>Role</h4>
 				<section>
 					<pre>
-<code class="python" data-line-numbers>if (agol_user.role == agol_user.roleId):
-		# Built-in user role - assign directly
-		sso_user.update_role(role=agol_user.role)
-	else:
-		# Custom role - first get role object from RoleManager
-		role = gis.users.roles.get_role(agol_user.roleId)
-		sso_user.update_role(role=role)
+<code class="python" data-line-numbers="1-7">builtin_roles = ['org_user', 'org_publisher', 'org_admin',
+					'viewer', 'view_only', 'viewplusedit']
+if (agol_user.role in builtin_roles):
+	# Built-in user role (org_user, org_publisher, org_admin, 
+	#                     viewer, view_only, viewplusedit)
+	# Assign directly
+	sso_user.update_role(role=agol_user.role)
+else:
+	# Custom role - first get role object from RoleManager
+	role = gis.users.roles.get_role(agol_user.roleId)
+	sso_user.update_role(role=role)
 </code>
 					</pre>
 					<aside class="notes">
-							For built-in user roles (<em>org_user, org_publisher, org_admin, viewer, view_only, viewplusedit</em>) you can just pass the <em>role</em> property to <em>update_role</em>. Users that don't have a custom role will have <em>User.role == User.RoleId</em>.
-							<br /><br />
-							For custom roles you have to get the role object from the <a href="https://developers.arcgis.com/python/api-reference/arcgis.gis.toc.html#rolemanager" target="_blank">RoleManager</a> static class (via gis.users.roles).
-							<br /><br />
-							You can't just use the second method for all of them because the built-in roles don't exist in the <em>RoleManager</em>.
+							<p>For built-in user roles (<em>org_user, org_publisher, org_admin, viewer, view_only, viewplusedit</em>) you can just pass the <em>role</em> property to <em>update_role</em>.</p>
 					</aside>
 				</section>
 				<section>
 					<pre>
-<code class="python" data-line-numbers>if (agol_user.role == agol_user.roleId):
-		# Built-in user role - assign directly
-		sso_user.update_role(role=agol_user.role)
-	else:
-		# Custom role - first get role object from RoleManager
-		role = gis.users.roles.get_role(agol_user.roleId)
-		sso_user.update_role(role=role)
+<code class="python" data-line-numbers="8-11">builtin_roles = ['org_user', 'org_publisher', 'org_admin',
+					'viewer', 'view_only', 'viewplusedit']
+if (agol_user.role in builtin_roles):
+	# Built-in user role (org_user, org_publisher, org_admin, 
+	#                     viewer, view_only, viewplusedit)
+	# Assign directly
+	sso_user.update_role(role=agol_user.role)
+else:
+	# Custom role - first get role object from RoleManager
+	role = gis.users.roles.get_role(agol_user.roleId)
+	sso_user.update_role(role=role)
 </code>
 				</pre>
+				<aside class="notes">
+						<p>For custom roles you have to get the role object from the <a href="https://developers.arcgis.com/python/api-reference/arcgis.gis.toc.html#rolemanager" target="_blank">RoleManager</a> static class (via gis.users.roles).</p>
+						<p>You can't just use the second method for all of them because the built-in roles don't exist in the <em>RoleManager</em>.</p>
+				</aside>
 			</section>
 			</section>
 			<section>
@@ -239,13 +334,20 @@ if (agol_user.esri_access == 'both'):
 	sso_user.esri_access = True
 </code>
 				</pre>
+				<aside class="notes">
+					<p>I assumed the regionalization settings would be the same for everyone in my organization, but there are some slight differences. 
+						I'm not sure why they don't all default to the same thing, though it may have to do with when a certain account was created.</p>
+					<p>For <a href="https://esri.github.io/arcgis-python-api/apidoc/html/arcgis.gis.toc.html#arcgis.gis.User.esri_access" target="_blank">esri_access</a> there 
+					   is a separate getter and setter.  From the help: "When getting, will return a string describing the current user’s esri access When setting, supply a bool to enable or 
+					   disable esri_access for that user (Administrator privileges required)"</p>
+					   <p>For us, the get options are <em>arcgisonly</em> or <em>both</em>.</p> If the old user has <em>both</em> we set the new user's to <em>True</em>.
+				</aside>
 			</section>
 			<section>
 				<h3>Groups</h3>
 				<section>
 					<pre>
-<code class="python" data-line-numbers="1-4">print('Updating groups'.center(40,'-'))
-for group in agol_user.groups:
+<code class="python" data-line-numbers="1-4">for group in agol_user.groups:
 	if (group.owner == agol_username):
 		print('Changing ownership: ' + group.title)
 		group.reassign_to(sso_username)
@@ -254,11 +356,14 @@ for group in agol_user.groups:
 		group.add_users([sso_username])	
 </code>
 					</pre>
+					<aside class="notes">
+						<p>For groups there are two scenarios.</p>
+						<p>If the original user owns the group then we need to transfer ownership to the new user.</p>
+					</aside>
 				</section>
 				<section>
 					<pre>
-<code class="python" data-line-numbers="5-8">print('Updating groups'.center(40,'-'))
-for group in agol_user.groups:
+<code class="python" data-line-numbers="5-8">for group in agol_user.groups:
 	if (group.owner == agol_username):
 		print('Changing ownership: ' + group.title)
 		group.reassign_to(sso_username)
@@ -267,6 +372,9 @@ for group in agol_user.groups:
 		group.add_users([sso_username])	
 </code>
 					</pre>
+					<aside class="notes">
+						<p>Otherwise we just make the new user a member of the group.</p>
+					</aside>
 				</section>
 			</section>
 			<section>
@@ -281,22 +389,57 @@ for group in agol_user.groups:
 				<section>
 					<h4>item_reassign()</h4>
 					<pre>
-	<code class="python" data-line-numbers>print("Content");
-	</code>
+<code class="python" data-line-numbers>all_groups = gis.groups.search('-')
+update_groups = [group.title for group in all_groups 
+		if 'updateitemcontrol' in group.capabilities]
+#...
+item_groups = [group.title for group in item.shared_with['groups']]
+item_update_groups = [title for title in item_groups 
+			if title in update_groups]
+if item_update_groups:
+	item.unshare(item_update_groups)
+	
+try:
+	item.reassign_to(user, target_folder=folder)
+except Exception as e:
+	print(e)
+	raise e
+
+if item_update_groups:
+	item.share(groups=item_update_groups, allow_members_to_edit=True)
+</code>
 					</pre>
 				</section>
 				<section>
 					<h4>Root Content</h4>
 					<pre>
-<code class="python" data-line-numbers>print("Content");
+<code class="python" data-line-numbers># Root Content #
+agol_root_items = agol_user.items()
+print('Folder: Root')
+for item in agol_root_items:
+	try:
+		print('* Moving: ' + item.title)
+		item_reassign(item=item, user=sso_username, folder=None)
+	except Exception as e:
+		print(e)
+		print("Item may have already been assigned to user.")
 </code>
 					</pre>
 				</section>
 				<section>
 					<h4>Folder Content</h4>
 					<pre>
-	<code class="python" data-line-numbers>print("Content");
-	</code>
+<code class="python" data-line-numbers>agol_folders = agol_user.folders
+sso_folders = sso_user.folders
+sso_foldernames = [folder['title'] for folder in sso_folders]
+for agol_folder in agol_folders:
+	gis.content.create_folder(agol_folder['title'], sso_username)
+	agol_folder_items = agol_user.items(folder=agol_folder['title']) 
+	for item in agol_folder_items:
+		print('* Moving ' + item.title)
+		item_reassign(item=item, user=sso_username, 
+				folder=agol_folder['title'])
+</code>
 					</pre>
 				</section>	
 			</section>
@@ -305,30 +448,34 @@ for group in agol_user.groups:
 					<section>
 						<h4>Favorites</h4>
 						<pre>
-	<code class="python" data-line-numbers>print("Content");
-	</code>
+<code class="python" data-line-numbers>agol_fav_items = gis.groups.get(agol_user.favGroupId)
+agol_favs = [content.title for content in agol_fav_items.content()]
+if agol_favs:
+	print("Old User's Favorites".center(40,'-'))
+	print(agol_favs)			
+</code>
 						</pre>
 					</section>
 					<section>
 						<h4>Credits</h4>
 						<pre>
-		<code class="python" data-line-numbers>print("Content");
-		</code>
+<code class="python" data-line-numbers>print('Old user account had {} credits'.format(agol_user.assignedCredits))
+</code>
 						</pre>
 					</section>
 					<section>
 						<h4>Licenses</h4>
 						<pre>
-	<code class="python" data-line-numbers>print("Content");
-	</code>
+<code class="python" data-line-numbers># Licenses #
+# Not yet available in AGOL (Enterprise only) #
+# print("Old User's Licenses".center(40,'-'))
+# print(agol_user.provisions)
+</code>
 						</pre>
 					</section>
 					<section>
 						<h4>Link your ArcGIS accounts</h4>
-						<pre>
-		<code class="python" data-line-numbers>print("Content");
-		</code>
-						</pre>
+							Requires authenticating to linked account.
 					</section>	
 				</section>
 	
