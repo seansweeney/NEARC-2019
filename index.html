@@ -381,15 +381,84 @@ if (agol_user.esri_access == 'both'):
 				<h3>Content</h3>
 				<section>
 					<h4>Share and update capabilities</h4>
+					<img src='images/what_can_members_update_tip.png' alt='What can members update?' style="border:none;" />
+				</section>
+				<section>
+					<h4>item_reassign()</h4>
 					<pre>
-<code class="python" data-line-numbers>print("Content");
+<code class="python" data-line-numbers=1-3>all_groups = gis.groups.search('-')
+update_groups = [group.title for group in all_groups 
+		if 'updateitemcontrol' in group.capabilities]
+#...
+item_groups = [group.title for group in item.shared_with['groups']]
+item_update_groups = [title for title in item_groups 
+			if title in update_groups]
+if item_update_groups:
+	item.unshare(item_update_groups)
+	
+try:
+	item.reassign_to(user, target_folder=folder)
+except Exception as e:
+	print(e)
+	raise e
+
+if item_update_groups:
+	item.share(groups=item_update_groups, allow_members_to_edit=True)
 </code>
 					</pre>
 				</section>
 				<section>
 					<h4>item_reassign()</h4>
 					<pre>
-<code class="python" data-line-numbers>all_groups = gis.groups.search('-')
+<code class="python" data-line-numbers=5-9>all_groups = gis.groups.search('-')
+update_groups = [group.title for group in all_groups 
+		if 'updateitemcontrol' in group.capabilities]
+#...
+item_groups = [group.title for group in item.shared_with['groups']]
+item_update_groups = [title for title in item_groups 
+			if title in update_groups]
+if item_update_groups:
+	item.unshare(item_update_groups)
+	
+try:
+	item.reassign_to(user, target_folder=folder)
+except Exception as e:
+	print(e)
+	raise e
+
+if item_update_groups:
+	item.share(groups=item_update_groups, allow_members_to_edit=True)
+</code>
+					</pre>
+				</section>
+				<section>
+					<h4>item_reassign()</h4>
+					<pre>
+<code class="python" data-line-numbers=11-15>all_groups = gis.groups.search('-')
+update_groups = [group.title for group in all_groups 
+		if 'updateitemcontrol' in group.capabilities]
+#...
+item_groups = [group.title for group in item.shared_with['groups']]
+item_update_groups = [title for title in item_groups 
+			if title in update_groups]
+if item_update_groups:
+	item.unshare(item_update_groups)
+	
+try:
+	item.reassign_to(user, target_folder=folder)
+except Exception as e:
+	print(e)
+	raise e
+
+if item_update_groups:
+	item.share(groups=item_update_groups, allow_members_to_edit=True)
+</code>
+					</pre>
+				</section>
+				<section>
+					<h4>item_reassign()</h4>
+					<pre>
+<code class="python" data-line-numbers=17-18>all_groups = gis.groups.search('-')
 update_groups = [group.title for group in all_groups 
 		if 'updateitemcontrol' in group.capabilities]
 #...
@@ -413,7 +482,23 @@ if item_update_groups:
 				<section>
 					<h4>Root Content</h4>
 					<pre>
-<code class="python" data-line-numbers># Root Content #
+<code class="python" data-line-numbers=2># Root Content #
+agol_root_items = agol_user.items()
+print('Folder: Root')
+for item in agol_root_items:
+	try:
+		print('* Moving: ' + item.title)
+		item_reassign(item=item, user=sso_username, folder=None)
+	except Exception as e:
+		print(e)
+		print("Item may have already been assigned to user.")
+</code>
+					</pre>
+				</section>
+				<section>
+					<h4>Root Content</h4>
+					<pre>
+<code class="python" data-line-numbers=4-10># Root Content #
 agol_root_items = agol_user.items()
 print('Folder: Root')
 for item in agol_root_items:
@@ -429,7 +514,39 @@ for item in agol_root_items:
 				<section>
 					<h4>Folder Content</h4>
 					<pre>
-<code class="python" data-line-numbers>agol_folders = agol_user.folders
+<code class="python" data-line-numbers=1-3>agol_folders = agol_user.folders
+sso_folders = sso_user.folders
+sso_foldernames = [folder['title'] for folder in sso_folders]
+for agol_folder in agol_folders:
+	gis.content.create_folder(agol_folder['title'], sso_username)
+	agol_folder_items = agol_user.items(folder=agol_folder['title']) 
+	for item in agol_folder_items:
+		print('* Moving ' + item.title)
+		item_reassign(item=item, user=sso_username, 
+				folder=agol_folder['title'])
+</code>
+					</pre>
+				</section>	
+				<section>
+					<h4>Folder Content</h4>
+					<pre>
+<code class="python" data-line-numbers=5-6>agol_folders = agol_user.folders
+sso_folders = sso_user.folders
+sso_foldernames = [folder['title'] for folder in sso_folders]
+for agol_folder in agol_folders:
+	gis.content.create_folder(agol_folder['title'], sso_username)
+	agol_folder_items = agol_user.items(folder=agol_folder['title']) 
+	for item in agol_folder_items:
+		print('* Moving ' + item.title)
+		item_reassign(item=item, user=sso_username, 
+				folder=agol_folder['title'])
+</code>
+					</pre>
+				</section>	
+				<section>
+					<h4>Folder Content</h4>
+					<pre>
+<code class="python" data-line-numbers=7-10>agol_folders = agol_user.folders
 sso_folders = sso_user.folders
 sso_foldernames = [folder['title'] for folder in sso_folders]
 for agol_folder in agol_folders:
