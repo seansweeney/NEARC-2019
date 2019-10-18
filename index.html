@@ -659,15 +659,14 @@ if agol_favs:
 					<section>
 						<h4>Credits</h4>
 						<pre>
-<code class="python" data-line-numbers>print('Old user account had {} credits'.format(agol_user.assignedCredits))
+<code class="python" data-line-numbers>print(f'Old user account had {agol_user.assignedCredits} credits')
+gis.admin.credits.allocate(username=sso_user.username, 
+							credits=agol_user.assignedCredits)
 </code>
 						</pre>
 						<aside class="notes">
 							<p>
-								At the time I originally wrote the script there was no way to set the credit limit and current credit balance
-								using the API. I had to print these out and fix them manually afterwards. As I was putting together this 
-								presentation, I found a document that suggests that this can now be done in the latest version of the API, 
-								but I didn't have time to update the code.
+								This is supposed to work according to the API documentation and the ArcGIS Notebooks Online samples, but it doesn't actually work for me.
 							</p>
 							<p>
 								See <a href="https://developers.arcgis.com/python/api-reference/arcgis.gis.admin.html?#creditmanager" target="_blank">CreditManager</a> 
