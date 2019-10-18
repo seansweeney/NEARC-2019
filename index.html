@@ -145,7 +145,7 @@ except:
 					</pre>
 					<aside class="notes">
 						<p>SSO login from the script was working for a while but has since stopped working for me.  I'm using my old AGOL account with admin 
-						access to run the script in the mean time.</p>
+						access to run the script in the meantime.</p>
 						
 						<p>For more info about SSO access from a script see 
 						<a href="https://developers.arcgis.com/python/guide/working-with-different-authentication-schemes/#User-authentication-with-OAuth-2.0" target="_blank">User authentication with OAuth 2.0</a>.</p>
@@ -188,7 +188,7 @@ except:
 </code>
 					</pre>
 					<aside class="notes">
-						In fact you don't need to specify any URL - it defaults to https://arcgis.com.
+						In fact, you don't need to specify any URL - it defaults to https://arcgis.com.
 					</aside>
 					</section>
 			</section>
@@ -208,10 +208,20 @@ except exceptions.Exception as e:
 	raise e
 </code>
 				</pre>
+				<aside class="notes">
+					<p>
+						The first step is to get the user objects for the old and new users. This step assumes the new user is already created. 
+						I have written the code to create the user but haven't gotten it integrated into the script yet.
+					</p>
+				</aside>
 			</section>
 			<section>
 			<h3>Profile Items</h3>
-				<img src='images/profile_items.png' alt='Profile Items' style="border:none;" />
+				<img src='images/profile_items.png' alt='Profile items' style="border:none;" />
+				<aside class="notes">
+					Some of the profile items are created automatically when the new account is created. Some things are not applicable or can't be
+					set. The rest can be transferred over using the API.
+				</aside>
 			</section>
 			<section>
 					<h3>Profile Items</h3>
@@ -256,7 +266,7 @@ sso_user.update(access=agol_user.access,
 					</pre>
 					<aside class="notes">
 							<p>Although the <em>thumbnail</em> input to <em>user.update()</em> is supposed to be able to take a URL, I found that didn't work for me so I 
-							   download the thumbmail to my TEMP directory and upload it from there to the new account.</p>
+							   download the thumbnail to my TEMP directory and upload it from there to the new account.</p>
 						</aside>
 					</section>
 				<section>
@@ -276,6 +286,9 @@ sso_user.update(access=agol_user.access,
 		)
 </code>
 					</pre>
+					<aside class="notes">
+						For some reason <em>fullName</em>, <em>firstName</em>, and <em>lastName</em> are three separate properties.
+					</aside>
 				</section>
 			</section>
 			<section>
@@ -297,7 +310,7 @@ else:
 </code>
 					</pre>
 					<aside class="notes">
-							<p>For built-in user roles (<em>org_user, org_publisher, org_admin, viewer, view_only, viewplusedit</em>) you can just pass the <em>role</em> property to <em>update_role</em>.</p>
+							<p>For built-in user roles (<em>org_user, org_publisher, org_admin, viewer, view_only, viewplusedit</em>) you can just pass the <em>role</em> property to <em>update_role()</em>.</p>
 					</aside>
 				</section>
 				<section>
@@ -316,7 +329,8 @@ else:
 </code>
 				</pre>
 				<aside class="notes">
-						<p>For custom roles you have to get the role object from the <a href="https://developers.arcgis.com/python/api-reference/arcgis.gis.toc.html#rolemanager" target="_blank">RoleManager</a> static class (via gis.users.roles).</p>
+						<p>For custom roles you have to get the role object from the <a href="https://developers.arcgis.com/python/api-reference/arcgis.gis.toc.html#rolemanager" target="_blank">RoleManager</a> 
+							static class (via <em>gis.users.roles</em>).</p>
 						<p>You can't just use the second method for all of them because the built-in roles don't exist in the <em>RoleManager</em>.</p>
 				</aside>
 			</section>
@@ -336,11 +350,11 @@ if (agol_user.esri_access == 'both'):
 				</pre>
 				<aside class="notes">
 					<p>I assumed the regionalization settings would be the same for everyone in my organization, but there are some slight differences. 
-						I'm not sure why they don't all default to the same thing, though it may have to do with when a certain account was created.</p>
+						I'm not sure why they don't all default to the same thing, though it may have to do with when each account was created.</p>
 					<p>For <a href="https://esri.github.io/arcgis-python-api/apidoc/html/arcgis.gis.toc.html#arcgis.gis.User.esri_access" target="_blank">esri_access</a> there 
-					   is a separate getter and setter.  From the help: "When getting, will return a string describing the current user’s esri access When setting, supply a bool to enable or 
+					   is a separate getter and setter.  From the help: "When getting, will return a string describing the current user’s esri access. When setting, supply a bool to enable or 
 					   disable esri_access for that user (Administrator privileges required)"</p>
-					   <p>For us, the get options are <em>arcgisonly</em> or <em>both</em>.</p> If the old user has <em>both</em> we set the new user's to <em>True</em>.
+					   <p>For us, the get options are <em>arcgisonly</em> or <em>both</em>.</p> If the old user has <em>both</em> then set the new user's value to <em>True</em>.
 				</aside>
 			</section>
 			<section>
@@ -358,7 +372,7 @@ if (agol_user.esri_access == 'both'):
 					</pre>
 					<aside class="notes">
 						<p>For groups there are two scenarios.</p>
-						<p>If the original user owns the group then we need to transfer ownership to the new user.</p>
+						<p>If the original user owns the group, then ownership needs to be transferred to the new user.</p>
 					</aside>
 				</section>
 				<section>
@@ -373,7 +387,7 @@ if (agol_user.esri_access == 'both'):
 </code>
 					</pre>
 					<aside class="notes">
-						<p>Otherwise we just make the new user a member of the group.</p>
+						<p>Otherwise, just make the new user a member of the group.</p>
 					</aside>
 				</section>
 			</section>
@@ -382,6 +396,10 @@ if (agol_user.esri_access == 'both'):
 				<section>
 					<h4>Share and update capabilities</h4>
 					<img src='images/what_can_members_update_tip.png' alt='What can members update?' style="border:none;" />
+					<aside class="notes">
+						<p>Groups created with <em>All items</em> selected for <em>What items in the group can its members update?</em> will have items that can be updated.</p>
+						<p>Items in groups with this setting cannot change ownership. You must un-share the item from the group, move it, then re-share.</p>
+					</aside>
 				</section>
 				<section>
 					<h4>item_reassign()</h4>
@@ -406,6 +424,12 @@ if item_update_groups:
 	item.share(groups=item_update_groups, allow_members_to_edit=True)
 </code>
 					</pre>
+					<aside class="notes">
+						<p>
+							First, I get a list of all the groups that have this setting. The <em>group.capabilities</em> property contains a list of capability values. 
+							If one of these is <em>updateitemcontrol</em> then the group has share and update capabilities.
+						</p>
+					</aside>
 				</section>
 				<section>
 					<h4>item_reassign()</h4>
@@ -430,6 +454,16 @@ if item_update_groups:
 	item.share(groups=item_update_groups, allow_members_to_edit=True)
 </code>
 					</pre>
+					<aside class="notes">
+						<p>
+							Next, I compare the list of groups that have the setting against a list of the current item's groups. If there
+							is a match, then I unshare the item from the groups that match.
+						</p>
+						<p>
+							Note that <em>item.unshare()</em> takes a list of groups as input, so the item can be unshared from all the target
+							groups with one call.
+						</p>
+					</aside>
 				</section>
 				<section>
 					<h4>item_reassign()</h4>
@@ -454,6 +488,9 @@ if item_update_groups:
 	item.share(groups=item_update_groups, allow_members_to_edit=True)
 </code>
 					</pre>
+					<aside class="notes">
+						Then move the item to the appropriate folder in the new user's account.
+					</aside>
 				</section>
 				<section>
 					<h4>item_reassign()</h4>
@@ -478,6 +515,27 @@ if item_update_groups:
 	item.share(groups=item_update_groups, allow_members_to_edit=True)
 </code>
 					</pre>
+					<aside class="notes">
+						<p>
+							Finally, share the item back to the groups it was unshared from, if any.
+						</p>
+						<p>
+							Note that <em>item.share()</em> takes a list of groups as input, so the item can be shared from all the target
+							groups with one call.
+						</p>
+					</aside>
+				</section>
+				<section>
+					<h4>Root Content</h4>
+					<img src='images/root_folder.png' alt='Root folder' style="border:none;" />
+					<aside class="notes">
+						<p>
+							Root items and items that are in folders need to be handled separately.
+						</p>
+						<p>
+							On ArcGIS Online the root folder is indicated by a home icon and your username in the <em>Folders</em> list.
+						</p>
+					</aside>
 				</section>
 				<section>
 					<h4>Root Content</h4>
@@ -494,6 +552,11 @@ for item in agol_root_items:
 		print("Item may have already been assigned to user.")
 </code>
 					</pre>
+					<aside class="notes">
+						<p>
+							Calling <em>user.items()</em> with no argument returns all the items in the user's root folder.
+						</p>
+					</aside>
 				</section>
 				<section>
 					<h4>Root Content</h4>
@@ -510,6 +573,11 @@ for item in agol_root_items:
 		print("Item may have already been assigned to user.")
 </code>
 					</pre>
+					<aside class="notes">
+						<p>
+							I then loop over those items and reassign them using my <em>item_reassign()</em> function and setting <em>folder=None</em>.
+						</p>
+					</aside>
 				</section>
 				<section>
 					<h4>Folder Content</h4>
@@ -526,11 +594,14 @@ for agol_folder in agol_folders:
 				folder=agol_folder['title'])
 </code>
 					</pre>
+					<aside class="notes">
+						For items in folders I first get a list of folder names.
+					</aside>
 				</section>	
 				<section>
 					<h4>Folder Content</h4>
 					<pre>
-<code class="python" data-line-numbers=5-6>agol_folders = agol_user.folders
+<code class="python" data-line-numbers=4-5>agol_folders = agol_user.folders
 sso_folders = sso_user.folders
 sso_foldernames = [folder['title'] for folder in sso_folders]
 for agol_folder in agol_folders:
@@ -542,11 +613,14 @@ for agol_folder in agol_folders:
 				folder=agol_folder['title'])
 </code>
 					</pre>
+					<aside class="notes">
+						I create the folder in the new account.
+					</aside>
 				</section>	
 				<section>
 					<h4>Folder Content</h4>
 					<pre>
-<code class="python" data-line-numbers=7-10>agol_folders = agol_user.folders
+<code class="python" data-line-numbers=4,6-10>agol_folders = agol_user.folders
 sso_folders = sso_user.folders
 sso_foldernames = [folder['title'] for folder in sso_folders]
 for agol_folder in agol_folders:
@@ -558,6 +632,9 @@ for agol_folder in agol_folders:
 				folder=agol_folder['title'])
 </code>
 					</pre>
+					<aside class="notes">
+						Then I get a list of the items to move, loop over them, and reassign them just like the root items, this time setting the appropriate folder name.
+					</aside>
 				</section>	
 			</section>
 			<section>
@@ -572,6 +649,12 @@ if agol_favs:
 	print(agol_favs)			
 </code>
 						</pre>
+						<aside class="notes">
+							<p>
+								I could not find a way to set favorites in the API at this time. Luckily most of my users don't have any set. The script 
+								displays a list of favorites at the end so that the user can re-set them manually if they want to.
+							</p>
+						</aside>
 					</section>
 					<section>
 						<h4>Credits</h4>
@@ -579,6 +662,18 @@ if agol_favs:
 <code class="python" data-line-numbers>print('Old user account had {} credits'.format(agol_user.assignedCredits))
 </code>
 						</pre>
+						<aside class="notes">
+							<p>
+								At the time I originally wrote the script there was no way to set the credit limit and current credit balance
+								using the API. I had to print these out and fix them manually afterwards. As I was putting together this 
+								presentation, I found a document that suggests that this can now be done in the latest version of the API, 
+								but I didn't have time to update the code.
+							</p>
+							<p>
+								See <a href="https://developers.arcgis.com/python/api-reference/arcgis.gis.admin.html?#creditmanager" target="_blank">CreditManager</a> 
+								for more details.
+							</p>
+						</aside>
 					</section>
 					<section>
 						<h4>Licenses</h4>
@@ -589,10 +684,26 @@ if agol_favs:
 # print(agol_user.provisions)
 </code>
 						</pre>
+						<aside class="notes">
+							<p>
+								Managing user licenses has not yet been added to the AGOL API, but it is available in Enterprise so I assume it's coming soon.
+							</p>
+							<P>
+								See <a href="https://developers.arcgis.com/python/api-reference/arcgis.gis.admin.html?#license" target="_blank">License</a> for more details.
+							</P>
+						</aside>
 					</section>
 					<section>
 						<h4>Link your ArcGIS accounts</h4>
 							Requires authenticating to linked account.
+							<aside class="notes">
+								<p>
+									Linking to other ArcGIS accounts requires authenticating to the linked account, which is something the script will never be able to do.
+								</p>
+								<p>
+									This needs to be done manually by the user after the  move. Almost none of our users use this feature.
+								</p>
+							</aside>
 					</section>	
 				</section>
 	
