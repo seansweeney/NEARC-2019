@@ -11,7 +11,8 @@ I'll demonstrate some of the components of the ArcGIS API for Python we're using
 ## Links ##
 
 * [Slides](http://seansweeney.github.io/NEARC-2019/)
-* [Slides with notes](http://seansweeney.github.io/NEARC-2019/?showNotes=true)
+* [Slides with speaker notes](http://seansweeney.github.io/NEARC-2019/?showNotes=true)
+* [The full script](https://github.com/seansweeney/move-agol-users-to-sso)
 * [ArcGIS API for Python documentation](https://developers.arcgis.com/python/)
 * [API Reference for the ArcGIS API for Python](https://developers.arcgis.com/python/api-reference/)
 
