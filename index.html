@@ -298,11 +298,11 @@ sso_user.update(access=agol_user.access,
 					<pre>
 <code class="python" data-line-numbers="1-7">builtin_roles = ['org_user', 'org_publisher', 'org_admin',
 					'viewer', 'view_only', 'viewplusedit']
-if (agol_user.role in builtin_roles):
+if (agol_user.roleId in builtin_roles):
 	# Built-in user role (org_user, org_publisher, org_admin, 
 	#                     viewer, view_only, viewplusedit)
 	# Assign directly
-	sso_user.update_role(role=agol_user.role)
+	sso_user.update_role(role=agol_user.roleId)
 else:
 	# Custom role - first get role object from RoleManager
 	role = gis.users.roles.get_role(agol_user.roleId)
@@ -310,18 +310,20 @@ else:
 </code>
 					</pre>
 					<aside class="notes">
-							<p>For built-in user roles (<em>org_user, org_publisher, org_admin, viewer, view_only, viewplusedit</em>) you can just pass the <em>role</em> property to <em>update_role()</em>.</p>
+							<p>For built-in user roles (<em>org_user, org_publisher, org_admin, viewer, view_only, viewplusedit</em>) you can just pass the <em>roleId</em> property to <em>update_role()</em>.</p>
+							<p>Note that you have to test the <em>roleId</em> property, not the <em>role</em> property, to check for a custom role.  The <em>role</em> property is always set to a built-in
+							   role, even if a custom role is set for the user.</p>
 					</aside>
 				</section>
 				<section>
 					<pre>
 <code class="python" data-line-numbers="8-11">builtin_roles = ['org_user', 'org_publisher', 'org_admin',
 					'viewer', 'view_only', 'viewplusedit']
-if (agol_user.role in builtin_roles):
+if (agol_user.roleId in builtin_roles):
 	# Built-in user role (org_user, org_publisher, org_admin, 
 	#                     viewer, view_only, viewplusedit)
 	# Assign directly
-	sso_user.update_role(role=agol_user.role)
+	sso_user.update_role(role=agol_user.roleId)
 else:
 	# Custom role - first get role object from RoleManager
 	role = gis.users.roles.get_role(agol_user.roleId)
